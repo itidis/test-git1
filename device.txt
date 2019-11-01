@@ -1,0 +1,119 @@
+*** Settings ***
+Suite Setup       获取token
+Library           requests
+Library           RequestsLibrary
+Library           Collections
+Resource          testflow.txt
+Resource          database1.txt
+
+*** Variables ***
+#${url}            http://admintest.measure.cloudream.net    # 设置后台地址
+
+*** Test Cases ***
+#device_yiluru
+#    create session  api  ${url}
+#    ${token}=  获取token
+#    sleep   2
+#    ${headers1}    create dictionary    token=${token}
+#    ${data1}  set variable  {"id":0,"serial_number":"","creater_name":"","create_time":{"begin":0,"end":0},"from":0,"limit":20}
+#    ${res}  post request  api   /api/measuremanage/device/getdevices  data=${data1}  headers=${headers1}
+#    ${resjson}  to json  ${res.content}
+#    ${rescode}  get from dictionary  ${resjson}  code
+#    ${totalnumber}  get from dictionary  ${resjson}  total
+#    should be equal as strings  ${rescode}  0
+#    should be equal as strings  ${totalnumber}  30
+#
+#    ${getdata}  get from dictionary  ${resjson}  data
+#    ${getdata1_id}  get from dictionary    ${getdata}[0]   id
+#    ${getdata1_regstas}  get from dictionary    ${getdata}[0]   regist_status
+#    ${getdata1_serial}  get from dictionary    ${getdata}[0]   serial_number
+#    ${getdata1_storename}  get from dictionary    ${getdata}[0]   store_name
+#    should be equal as strings  ${getdata1_id}  192419
+#    should be equal as strings  ${getdata1_regstas}  1
+#    should be equal as strings  ${getdata1_serial}  BS000000000020190304
+#    should be equal as strings  ${getdata1_storename}  测试珊瑚门店
+#
+#
+#按设备编号搜索
+#    创建session  api  ${url}
+#    ${token}=  获取token
+#    sleep   2
+#    ${headers}  create dictionary  token=${token}
+#    ${datas}=  设置参数  {"id":192419,"serial_number":"","creater_name":"","create_time":{"begin":0,"end":0},"from":0,"limit":20}
+#    ${res}=  post请求  api  /api/measuremanage/device/getdevices  data=${datas}  headers=${headers}
+#    ${resjson}=  结果转换为json  ${res.content}
+#    ${getcode}=  从字典获取  ${resjson}  code
+#    ${getmsg}=  从字典获取  ${resjson}  msg
+##    ${getdata}=  从字典获取  ${resjson}  data
+#    ${getdata}  get from dictionary  ${resjson}  data
+#    ${getserial}=  从字典获取  ${getdata}[0]  serial_number
+#    结果断言  ${getcode}  0
+#    结果断言  ${getmsg}  ok
+#    结果断言  ${getserial}  BS000000000020190304
+#
+#按序列号搜索
+#    创建session  api  ${url}
+#    ${token}=  获取token
+#    sleep   2
+#    ${headers}  create dictionary  token=${token}
+#    ${datas}=  设置参数  {"id":0,"serial_number":"BS000000000020190304","creater_name":"","create_time":{"begin":0,"end":0},"from":0,"limit":20}
+#    ${res}=  post请求  api  /api/measuremanage/device/getdevices  data=${datas}  headers=${headers}
+#    ${resjson}=  结果转换为json  ${res.content}
+#    ${getcode}=  从字典获取  ${resjson}  code
+#    ${getmsg}=  从字典获取  ${resjson}  msg
+##    ${getdata}=  从字典获取  ${resjson}  data
+#    ${getdata}  get from dictionary  ${resjson}  data
+#    ${getserial}=  从字典获取  ${getdata}[0]  id
+#    结果断言  ${getcode}  0
+#    结果断言  ${getmsg}  ok
+#    结果断言  ${getserial}  192419
+
+按创建人搜索
+#    ${token}=  获取token
+    log  ${gettoken}
+    sleep   2
+    ${headers}  create dictionary  token=${gettoken}
+    ${datas}=  设置参数  {"id":0,"serial_number":"","creater_name":"xiaoquan","create_time":{"begin":0,"end":0},"from":0,"limit":20}
+    ${res}=  post请求  api  /api/measuremanage/device/getdevices  data=${datas}  headers=${headers}
+    ${resjson}=  结果转换为json  ${res.content}
+    ${getcode}=  从字典获取  ${resjson}  code
+    ${getmsg}=  从字典获取  ${resjson}  msg
+    ${gettotal}=  从字典获取  ${resjson}  total
+#    ${getdata}=  从字典获取  ${resjson}  data
+    ${getdata}  get from dictionary  ${resjson}  data
+#    ${getserial}  从字典获取  ${getdata}[0]  id
+    结果断言  ${getcode}  0
+    结果断言  ${getmsg}  ok
+    结果断言  ${gettotal}  5
+    sleep  1
+    ${getvalue}  get dictionary values  ${getdata}[0]
+    should contain  ${getvalue}  BS000000000020190304
+    sleep  1
+
+#按创建时间搜索
+#    ${token}=  获取token
+#    sleep   2
+#    ${headers}  create dictionary  token=${token}
+#    ${datas}=  设置参数  {"id":0,"serial_number":"","creater_name":"","create_time":{"begin":1561910400,"end":1564588799},"from":0,"limit":20}
+#    ${res}=  post请求  api  /api/measuremanage/device/getdevices  data=${datas}  headers=${headers}
+#    ${resjson}=  结果转换为json  ${res.content}
+#    ${getcode}=  从字典获取  ${resjson}  code
+#    ${getmsg}=  从字典获取  ${resjson}  msg
+#    ${gettotal}=  从字典获取  ${resjson}  total
+##    ${getdata}=  从字典获取  ${resjson}  data
+#    ${getdata}  get from dictionary  ${resjson}  data
+##    ${getserial}  从字典获取  ${getdata}[0]  id
+#    结果断言  ${getcode}  0
+#    结果断言  ${getmsg}  ok
+#    结果断言  ${gettotal}  5
+#    ${getvalue}  get dictionary values  ${getdata}[0]
+#    should contain any   ${getvalue}  BS000000000020190304  BS000000000020190303  111111111111  BS03WN0222222222222401201905002  BS03WN01501201903001
+
+#
+#
+#
+#
+#
+#
+#
+#

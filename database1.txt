@@ -1,0 +1,17 @@
+*** Settings ***
+#Suite Setup       token
+Library           DatabaseLibrary
+*** Variables ***
+${host}           127.0.0.1
+${port}           3306
+${user}           root
+${passwd}         sz123456
+${db}             rftest
+${charset}        utf8
+*** Keywords ***
+连接数据库
+    connect to database using custom params  pymysql  host='${host}' ,port=${port} ,user='${user}' ,passwd='${passwd}',db='${db}',charset= '${charset}'
+#    ${a}  query  select sname from Student where sid=2
+#    log  ${a}[0][0]
+#    should be equal  ${a}[0][0]  Cindy
+#    disconnect from database
